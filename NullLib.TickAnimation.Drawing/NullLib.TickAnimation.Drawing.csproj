@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>NullLib.TickAnimation</RootNamespace>
+    <Version>1.0.1</Version>
+    <Copyright>Copyright 2021 SlimeNull</Copyright>
+    <PackageProjectUrl>https://github.com/SlimeNull/NullLib.TickAnimation</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SlimeNull/NullLib.TickAnimation</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Description>TickAnimation externsion for System.Drawing, provides ways to do Point easing. 针对 System.Drawing 的 TickAnimation 拓展, 提供执行点与点过渡的方式</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NullLib.TickAnimation" Version="1.0.1.2" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	<LangVersion>latest</LangVersion>
+	<Version>1.0.1.2</Version>
+	<Description>TickAnimation, process element easing easily by bezier curves. 嘀嗒动画, 通过贝塞尔曲线方便快捷的实现元素缓动</Description>
+	<Copyright>Copyright 2021 SlimeNull</Copyright>
+	<PackageProjectUrl>https://github.com/SlimeNull/NullLib.TickAnimation</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/SlimeNull/NullLib.TickAnimation</RepositoryUrl>
+	<RepositoryType>GitHub</RepositoryType>
+	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
