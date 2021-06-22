@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>NullLib.TickAnimation</RootNamespace>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Copyright>Copyright 2021 SlimeNull</Copyright>
     <PackageProjectUrl>https://github.com/SlimeNull/NullLib.TickAnimation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SlimeNull/NullLib.TickAnimation</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <Description>TickAnimation externsion for System.Drawing, provides ways to do Point easing. 针对 System.Drawing 的 TickAnimation 拓展, 提供执行点与点过渡的方式</Description>
+    <Description>TickAnimation externsion for System.Drawing, provides ways to do easing of point, size, rectangle, and color. 针对 System.Drawing 的 TickAnimation 拓展, 提供执行点, 尺寸, 矩形区域, 以及颜色的过渡的方式</Description>
   </PropertyGroup>
 
   <ItemGroup>
