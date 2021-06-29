@@ -4,7 +4,7 @@ NullLib.TickAnimation 用于实现对一个对象的属性(Property), 以指定�
 
 
 <div align="center">
-<a href="https://www.picbed.cn/images/2021/06/30/nMsu3Dxxpt.gif">
+<a target="_blank" href="https://www.picbed.cn/images/2021/06/30/nMsu3Dxxpt.gif">
 <img src="https://www.picbed.cn/images/2021/06/30/nMsu3Dxxpt.gif" alt="点击此处跳转到图片源页面"/>
 </a>
 </div>
