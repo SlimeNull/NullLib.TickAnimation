@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>NullLib.TickAnimation</RootNamespace>
-    <Version>1.0.2</Version>
+    <Version>1.0.2.2</Version>
     <Copyright>Copyright 2021 SlimeNull</Copyright>
     <PackageProjectUrl>https://github.com/SlimeNull/NullLib.TickAnimation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SlimeNull/NullLib.TickAnimation</RepositoryUrl>
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NullLib.TickAnimation" Version="1.0.1.2" />
+    <PackageReference Include="NullLib.TickAnimation" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

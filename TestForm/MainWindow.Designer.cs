@@ -35,21 +35,26 @@ namespace TestForm
             this.curvePn = new System.Windows.Forms.Panel();
             this.resetBtn = new System.Windows.Forms.Button();
             this.dataPanel = new System.Windows.Forms.GroupBox();
+            this.funnyBtn = new System.Windows.Forms.Button();
             this.appAuthor = new System.Windows.Forms.Label();
             this.formTitle = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.navPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.navContainer = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.notifyAnimEnded = new System.Windows.Forms.CheckBox();
             this.mask = new System.Windows.Forms.Panel();
-            this.button3 = new System.Windows.Forms.Button();
-            this.funnyBtn = new System.Windows.Forms.Button();
+            this.aroundBtn = new System.Windows.Forms.Button();
+            this.recordBtn = new System.Windows.Forms.Button();
+            this.transBtn = new System.Windows.Forms.Button();
+            this.randPosBtn = new System.Windows.Forms.Button();
             this.dataPanel.SuspendLayout();
             this.navPanel.SuspendLayout();
             this.navContainer.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.mask.SuspendLayout();
             this.SuspendLayout();
             // 
             // toggleBtn
@@ -94,6 +99,8 @@ namespace TestForm
             this.curvePn.Size = new System.Drawing.Size(200, 200);
             this.curvePn.TabIndex = 5;
             this.curvePn.Paint += new System.Windows.Forms.PaintEventHandler(this.curvePn_Paint);
+            this.curvePn.MouseEnter += new System.EventHandler(this.curvePn_MouseEnter);
+            this.curvePn.MouseLeave += new System.EventHandler(this.curvePn_MouseLeave);
             // 
             // resetBtn
             // 
@@ -116,6 +123,16 @@ namespace TestForm
             this.dataPanel.TabIndex = 3;
             this.dataPanel.TabStop = false;
             this.dataPanel.Text = "Data Panel";
+            // 
+            // funnyBtn
+            // 
+            this.funnyBtn.Location = new System.Drawing.Point(99, 107);
+            this.funnyBtn.Name = "funnyBtn";
+            this.funnyBtn.Size = new System.Drawing.Size(75, 23);
+            this.funnyBtn.TabIndex = 0;
+            this.funnyBtn.Text = "Catch me";
+            this.funnyBtn.UseVisualStyleBackColor = true;
+            this.funnyBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.funnyBtn_Click);
             // 
             // appAuthor
             // 
@@ -157,7 +174,7 @@ namespace TestForm
             this.navPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.navPanel.Location = new System.Drawing.Point(0, 0);
             this.navPanel.Name = "navPanel";
-            this.navPanel.Size = new System.Drawing.Size(198, 455);
+            this.navPanel.Size = new System.Drawing.Size(200, 457);
             this.navPanel.TabIndex = 0;
             // 
             // button1
@@ -173,10 +190,20 @@ namespace TestForm
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Location = new System.Drawing.Point(24, 32);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(54, 23);
+            this.button3.TabIndex = 0;
+            this.button3.Text = "Toggle";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.toggleBtn_Click);
+            // 
             // navContainer
             // 
             this.navContainer.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.navContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.navContainer.Controls.Add(this.navPanel);
             this.navContainer.Dock = System.Windows.Forms.DockStyle.Left;
             this.navContainer.Location = new System.Drawing.Point(0, 0);
@@ -217,32 +244,59 @@ namespace TestForm
             // mask
             // 
             this.mask.BackColor = System.Drawing.SystemColors.Control;
+            this.mask.Controls.Add(this.aroundBtn);
+            this.mask.Controls.Add(this.recordBtn);
+            this.mask.Controls.Add(this.transBtn);
+            this.mask.Controls.Add(this.randPosBtn);
             this.mask.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mask.Location = new System.Drawing.Point(0, 0);
             this.mask.Name = "mask";
             this.mask.Size = new System.Drawing.Size(829, 457);
             this.mask.TabIndex = 10;
             // 
-            // button3
+            // aroundBtn
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(24, 32);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(54, 23);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "Toggle";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.toggleBtn_Click);
+            this.aroundBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.aroundBtn.Location = new System.Drawing.Point(393, 422);
+            this.aroundBtn.Name = "aroundBtn";
+            this.aroundBtn.Size = new System.Drawing.Size(75, 23);
+            this.aroundBtn.TabIndex = 3;
+            this.aroundBtn.Text = "Around";
+            this.aroundBtn.UseVisualStyleBackColor = true;
+            this.aroundBtn.Click += new System.EventHandler(this.aroundBtn_Click);
             // 
-            // funnyBtn
+            // recordBtn
             // 
-            this.funnyBtn.Location = new System.Drawing.Point(99, 107);
-            this.funnyBtn.Name = "funnyBtn";
-            this.funnyBtn.Size = new System.Drawing.Size(75, 23);
-            this.funnyBtn.TabIndex = 0;
-            this.funnyBtn.Text = "Funny";
-            this.funnyBtn.UseVisualStyleBackColor = true;
-            this.funnyBtn.MouseDown += new System.Windows.Forms.MouseEventHandler(this.funnyBtn_Click);
+            this.recordBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.recordBtn.Location = new System.Drawing.Point(474, 422);
+            this.recordBtn.Name = "recordBtn";
+            this.recordBtn.Size = new System.Drawing.Size(85, 23);
+            this.recordBtn.TabIndex = 2;
+            this.recordBtn.Text = "Record State";
+            this.recordBtn.UseVisualStyleBackColor = true;
+            this.recordBtn.Click += new System.EventHandler(this.recordBtn_Click);
+            // 
+            // transBtn
+            // 
+            this.transBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.transBtn.Location = new System.Drawing.Point(565, 422);
+            this.transBtn.Name = "transBtn";
+            this.transBtn.Size = new System.Drawing.Size(75, 23);
+            this.transBtn.TabIndex = 1;
+            this.transBtn.Text = "Transform";
+            this.transBtn.UseVisualStyleBackColor = true;
+            this.transBtn.Click += new System.EventHandler(this.transBtn_Click);
+            // 
+            // randPosBtn
+            // 
+            this.randPosBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.randPosBtn.Location = new System.Drawing.Point(646, 422);
+            this.randPosBtn.Name = "randPosBtn";
+            this.randPosBtn.Size = new System.Drawing.Size(105, 23);
+            this.randPosBtn.TabIndex = 0;
+            this.randPosBtn.Text = "Random Position";
+            this.randPosBtn.UseVisualStyleBackColor = true;
+            this.randPosBtn.Click += new System.EventHandler(this.randPosBtn_Click);
             // 
             // MainWindow
             // 
@@ -261,6 +315,7 @@ namespace TestForm
             this.navContainer.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.mask.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -275,7 +330,6 @@ namespace TestForm
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.FlowLayoutPanel navPanel;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Panel curvePn;
         private System.Windows.Forms.Button drawCurveBtn;
         private System.Windows.Forms.Button clearBtn;
         private System.Windows.Forms.Panel navContainer;
@@ -284,6 +338,11 @@ namespace TestForm
         private System.Windows.Forms.Panel mask;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button funnyBtn;
+        private System.Windows.Forms.Button randPosBtn;
+        private System.Windows.Forms.Button transBtn;
+        private System.Windows.Forms.Button recordBtn;
+        private System.Windows.Forms.Button aroundBtn;
+        private System.Windows.Forms.Panel curvePn;
     }
 }
 

@@ -1,30 +1,38 @@
 ﻿using System;
-using System.Linq;
 
 namespace NullLib.TickAnimation
 {
     public class QuadraticBezierTicker : BezierTickerBase
     {
-        double x, y;
+        private void GetBasicCurve(QuadraticBezierCurve curve, EasingMode mode, out double x, out double y)
+        {
+            var values = mode switch
+            {
+                EasingMode.Ease => (0, 0),
+                EasingMode.EaseInOut => (0, 0),
+                EasingMode.EaseIn => curve switch
+                {
+                    QuadraticBezierCurve.Ease => (0.42, 0),
+                    QuadraticBezierCurve.Speed => (0.4, 0),
+                    _ => (0, 0)
+                },
+                EasingMode.EaseOut => curve switch
+                {
+                    QuadraticBezierCurve.Ease => (0.58, 1),
+                    QuadraticBezierCurve.Speed => (0.2, 1),
+                    _ => (0, 0)
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(mode))
+            };
+            x = values.Item1;
+            y = values.Item2;
+        }
 
-        public double X
-        {
-            get => x;
-            set
-            {
-                x = value;
-                ResetSequence();
-            }
-        }
-        public double Y
-        {
-            get => y;
-            set
-            {
-                y = value;
-                ResetSequence();
-            }
-        }
+        private double y;
+        private double x;
+
+        public double X { get => x; set => x = value; }
+        public double Y { get => y; set => y = value; }
 
         private double GetSamplePoint(double cp, double rate)
         {
@@ -67,62 +75,23 @@ namespace NullLib.TickAnimation
             }
         }
 
-        public QuadraticBezierTicker(double x, double y, int count) => SetOption(x, y, count);
-        public QuadraticBezierTicker(double x, double y) : this(x, y, 15) { }
-        public QuadraticBezierTicker(QuadraticCurves curve, int count)
-        {
-            switch (curve)
-            {
-                case QuadraticCurves.Linear: SetOption(0, 0, count); break;
-                case QuadraticCurves.EaseIn: SetOption(0.42, 0, count); break;
-                case QuadraticCurves.EaseOut: SetOption(0.58, 1.0, count); break;
-                case QuadraticCurves.FastOutLinearIn: SetOption(0.4, 0, count); break;
-                case QuadraticCurves.LinearOutSlowIn: SetOption(0, 0, count); break;
-                default: throw new ArgumentOutOfRangeException(nameof(curve));
-            }
-        }
-        public QuadraticBezierTicker(QuadraticCurves curve) : this(curve, 15) { }
-        public QuadraticBezierTicker() : this(QuadraticCurves.Linear) { }
+
+        public QuadraticBezierTicker(double x, double y) => SetBezier(x, y);
+        public QuadraticBezierTicker(QuadraticBezierCurve curve, EasingMode mode) => SetBezier(curve, mode);
+        public QuadraticBezierTicker(QuadraticBezierCurve curve) : this(curve, EasingMode.Ease) { }
+        public QuadraticBezierTicker() : this(QuadraticBezierCurve.Linear) { }
 
         public void SetBezier(double x, double y)
         {
-            this.x = x;
-            this.y = y;
-            ResetSequence();
+            this.X = x;
+            this.Y = y;
         }
-        public void SetOption(double x, double y, int count)
+        public void SetBezier(QuadraticBezierCurve curve, EasingMode mode)
         {
-            this.x = x;
-            this.y = y;
-            this.count = count;
-            ResetSequence();
+            GetBasicCurve(curve, mode, out x, out y);
         }
 
-        protected override double GetSampleRate(double x) => GetSampleRate(this.x, x);
-        protected override double GetSampleValue(double rate) => GetSamplePoint(this.x, rate);
-    }
-    public enum QuadraticCurves
-    {
-        /// <summary>
-        /// X:0, Y:0
-        /// </summary>
-        Linear,           // 0, 0
-        /// <summary>
-        /// X:0.42, Y:0
-        /// </summary>
-        EaseIn,           // 0.42, 0
-        /// <summary>
-        /// X:0.58, Y:1.0
-        /// </summary>
-        EaseOut,          // 0.58, 1.0
-
-        /// <summary>
-        /// X:0.4, Y:0
-        /// </summary>
-        FastOutLinearIn,  // 0.4, 0
-        /// <summary>
-        /// X:0.2, Y:1.0
-        /// </summary>
-        LinearOutSlowIn,  // 0.2, 10
+        protected override double GetSampleRate(double x) => GetSampleRate(this.X, x);
+        protected override double GetSampleValue(double rate) => GetSamplePoint(this.X, rate);
     }
 }
