@@ -1,6 +1,6 @@
 ﻿namespace NullLib.TickAnimation
 {
-    public abstract class FuncTickerBase : ITicker
+    public abstract class FuncTickerBase : TickerBase
     {
         private EasingMode easingMode;
 
@@ -12,7 +12,7 @@
             }
         }
 
-        public double CalcTick(double x)
+        public override double CalcTick(double x)
         {
             switch (EasingMode)
             {

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NullLib.TickAnimation;
+using NullLib.TickAnimation.WinForm;
+using TestForm.View;
 using TestForm.ViewModule;
 
 namespace TestForm
@@ -22,20 +24,40 @@ namespace TestForm
             maskAnimator = new DrawingTickAnimator(new QuadraticBezierTicker(QuadraticBezierCurve.Ease), mask, nameof(mask.BackColor));
             funnyBtnAnimator = new DrawingTickAnimator(new CubicBezierTicker(CubicBezierCurve.Back, EasingMode.EaseOut), funnyBtn, nameof(funnyBtn.Location));
             formAnimator = new DrawingTickAnimator(new CubicBezierTicker(CubicBezierCurve.Ease), this, nameof(Bounds));
-            pnColorAnimator = new DrawingTickAnimator(new SineTicker(), this, nameof(PnColor));
+            pnColorAnimator = new DrawingTickAnimator(new CubicTicker(EasingMode.EaseOut), this, nameof(PnColor));
 
             CheckForIllegalCrossThreadCalls = false;
-            navAnimator.SetPropertySetter((setAction) => Invoke(setAction));              // cross-threads operation needs this. 跨线程操作需要这个
-            funnyBtnAnimator.SetPropertySetter((setAction) => Invoke(setAction));         // invoke an action at main thread 在主线程上invoke一个action
-            formAnimator.SetPropertySetter((setAction) => Invoke(setAction));
+            navAnimator.UseWinForm(this);
+            funnyBtnAnimator.UseWinForm(funnyBtn);         // invoke an action at main thread 在主线程上invoke一个action
+            formAnimator.UseWinForm(this);
 
             //funnyBtn.MouseEnter += funnyBtn_Click;
-            funnyBtn.MouseMove += funnyBtn_Click;
+            funnyBtn.MouseEnter += funnyBtn_RandomMove;
 
-            navAnimator.SetTickDelay(1);
-            formAnimator.SetTickDelay(3);
-            funnyBtnAnimator.SetTickDelay(1);
-            pnColorAnimator.SetTickDelay(1);
+            for (int i = 0; i < 10; i++)
+            {
+                Button btn = new Button()
+                {
+                    Text = "Hello?",
+                    Width = 200,
+                    Height = 45,
+                };
+
+                var animator = new TickAnimator(new BackTicker(EasingMode.EaseOut), btn, nameof(btn.Height));
+                animator.UseWinForm(btn);
+
+                btn.MouseEnter += (sender, e) => animator.Animate(85, 300);
+                btn.MouseLeave += (sender, e) => animator.Animate(45, 300);
+
+                listTest.Controls.Add(btn);
+            }
+
+            TickAnimator titleAnimator = new TickAnimator(new CircleTicker(EasingMode.EaseOut), formTitle, nameof(Left));
+            titleAnimator.UseWinForm(formTitle);
+
+            int originTitleLeft = formTitle.Left;
+            formTitle.MouseEnter += (s, e) => titleAnimator.Animate(originTitleLeft + 50, 300);
+            formTitle.MouseLeave += (s, e) => titleAnimator.Animate(originTitleLeft, 1000);
         }
 
         private void InitBinding()
@@ -47,6 +69,7 @@ namespace TestForm
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            BufferedGraphicsManager.Current.Allocate(Graphics.FromHwnd(IntPtr.Zero), new Rectangle(0, 0, Width, Height));
             IsShowMenu = false;
             recordedState = Bounds;
         }
@@ -56,8 +79,8 @@ namespace TestForm
         DrawingTickAnimator funnyBtnAnimator;
         DrawingTickAnimator formAnimator;
         CubicBezierTicker showTicker = new CubicBezierTicker(CubicBezierCurve.Back, EasingMode.EaseOut);
-        ITicker closeTicker = new QuadraticBezierTicker(QuadraticBezierCurve.Ease);
-        ITicker tempTicker = new BackTicker(EasingMode.EaseOut) { Amplitude = 0.5 };
+        TickerBase closeTicker = new QuadraticBezierTicker(QuadraticBezierCurve.Ease);
+        TickerBase tempTicker = new BackTicker(EasingMode.EaseOut) { Amplitude = 0.5 };
         private bool isShowMenu = false;
 
         bool IsShowMenu
@@ -73,7 +96,7 @@ namespace TestForm
                     //navContainer.BringToFront();
                     //maskAnimator.FrameAnimate(mask.BackColor, Color.FromArgb(50, 0, 0, 0), 100);
                     navAnimator.SetTicker(tempTicker);
-                    navAnimator.Animate(200, 500).ContinueWith((t) =>    // show menu bar  显示菜单栏, 500ms
+                    navAnimator.Animate(300, 500).ContinueWith((t) =>    // show menu bar  显示菜单栏, 500ms
                     {
                         if (ViewModule.NotifyAnimationEnded)
                             MessageBox.Show("Animation ended");
@@ -133,7 +156,7 @@ namespace TestForm
             container.Size -= selfSize;
             return new Point(RandInt(container.X, container.X + container.Width), RandInt(container.Y, container.Y + container.Height));
         }
-        private void funnyBtn_Click(object sender, EventArgs e)
+        private void funnyBtn_RandomMove(object sender, EventArgs e)
         {
             Button senderBtn = sender as Button;
             Point newPoint = GetRandomPoint(senderBtn.Parent.ClientRectangle, senderBtn.Size);
@@ -167,6 +190,8 @@ namespace TestForm
             int
                 xend = workingArea.Width - Width,
                 yend = workingArea.Height - Height;
+
+
             Task.Run(() =>
             {
                 formAnimator
@@ -197,6 +222,16 @@ namespace TestForm
         private void curvePn_MouseEnter(object sender, EventArgs e)
         {
             pnColorAnimator.Animate(Color.Pink, 200);
+        }
+
+        private void btn_bezier_Click(object sender, EventArgs e)
+        {
+            new BezierCurveTest().ShowDialog();
+        }
+
+        private void btn_testform_Click(object sender, EventArgs e)
+        {
+            new View.TestWindow().ShowDialog();
         }
     }
 }

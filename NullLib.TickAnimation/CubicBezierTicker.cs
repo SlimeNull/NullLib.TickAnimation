@@ -141,7 +141,7 @@ namespace NullLib.TickAnimation
         }
         private double GetSamplePoint(double cp1, double cp2, double rate)
         {
-            return 3 * cp1 * rate * (1 - rate) * (1 - rate) + 3 * cp2 * rate * rate * (1 - rate) + rate * rate * rate;
+            return 3d * cp1 * rate * (1d - rate) * (1d - rate) + 3d * cp2 * rate * rate * (1d - rate) + rate * rate * rate;
             // return 3 * cp1 * rate - 3 * cp1 * 2 * rate * rate + 3 * cp1 * rate * rate * rate + 3 * cp2 * rate * rate - 3 * cp2 * rate * rate * rate + rate * rate * rate;
         }
 

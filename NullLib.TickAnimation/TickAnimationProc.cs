@@ -5,7 +5,25 @@ namespace NullLib.TickAnimation
 {
     public class TickAnimationProc
     {
-        public static void SyncAnimate<T>(ITicker ticker, Func<double, T> tickGetter, TimeSpan timeSpan, Func<T, bool> callback)
+        public static void SyncAnimate(ITicker ticker, TimeSpan timeSpan, Action<double> callback)
+        {
+            DateTime startTime = DateTime.Now;
+            DateTime endTime = startTime + timeSpan;
+            DateTime now;
+
+            double xrate;
+            double
+                startTicks = startTime.Ticks,
+                spanTicks = timeSpan.Ticks;
+
+            while ((now = DateTime.Now) < endTime)
+            {
+                xrate = (now.Ticks - startTicks) / spanTicks;
+                callback.Invoke(ticker.CalcTick(xrate));
+            }
+            callback.Invoke(1);
+        }
+        public static void SyncAnimate(ITicker ticker, TimeSpan timeSpan, Func<double, bool> callback)
         {
             DateTime startTime = DateTime.Now;
             DateTime endTime = startTime + timeSpan;
@@ -20,35 +38,35 @@ namespace NullLib.TickAnimation
             while (goon && (now = DateTime.Now) < endTime)
             {
                 xrate = (now.Ticks - startTicks) / spanTicks;
-                goon = callback.Invoke(tickGetter.Invoke(ticker.CalcTick(xrate)));
+                goon = callback.Invoke(ticker.CalcTick(xrate));
             }
-            callback.Invoke(tickGetter.Invoke(1));
+            callback.Invoke(1);
         }
         public static void SyncAnimate<T>(ITicker ticker, Func<double, T> tickGetter, TimeSpan timeSpan, Action<T> callback)
         {
-            DateTime startTime = DateTime.Now;
-            DateTime endTime = startTime + timeSpan;
-            DateTime now;
-
-            double xrate;
-            double
-                startTicks = startTime.Ticks,
-                spanTicks = timeSpan.Ticks;
-
-            while ((now = DateTime.Now) < endTime)
-            {
-                xrate = (now.Ticks - startTicks) / spanTicks;
-                callback.Invoke(tickGetter.Invoke(ticker.CalcTick(xrate)));
-            }
-            callback.Invoke(tickGetter.Invoke(1));
+            SyncAnimate(ticker, timeSpan, v => callback(tickGetter(v)));
         }
-        public static async Task Animate<T>(ITicker ticker, Func<double, T> tickGetter, TimeSpan timeSpan, Func<T, bool> callback)
+        public static void SyncAnimate<T>(ITicker ticker, Func<double, T> tickGetter, TimeSpan timeSpan, Func<T, bool> callback)
         {
-            await Task.Run(() => SyncAnimate(ticker, tickGetter, timeSpan, callback));
+            SyncAnimate(ticker, timeSpan, v => callback(tickGetter(v)));
         }
-        public static async Task Animate<T>(ITicker ticker, Func<double, T> tickGetter, TimeSpan timeSpan, Action<T> callback)
+
+
+        public static Task Animate(ITicker ticker, TimeSpan timeSpan, Func<double, bool> callback)
         {
-            await Task.Run(() => SyncAnimate(ticker, tickGetter, timeSpan, callback));
+            return Task.Run(() => SyncAnimate(ticker, timeSpan, callback));
+        }
+        public static Task Animate(ITicker ticker, TimeSpan timeSpan, Action<double> callback)
+        {
+            return Task.Run(() => SyncAnimate(ticker, timeSpan, callback));
+        }
+        public static Task Animate<T>(ITicker ticker, Func<double, T> tickGetter, TimeSpan timeSpan, Func<T, bool> callback)
+        {
+            return Task.Run(() => SyncAnimate(ticker, tickGetter, timeSpan, callback));
+        }
+        public static Task Animate<T>(ITicker ticker, Func<double, T> tickGetter, TimeSpan timeSpan, Action<T> callback)
+        {
+            return Task.Run(() => SyncAnimate(ticker, tickGetter, timeSpan, callback));
         }
     }
 }

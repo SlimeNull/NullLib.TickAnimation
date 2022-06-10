@@ -34,7 +34,7 @@ namespace TestConsole
         }
         static void Main(string[] args)
         {
-            CubicBezierTicker ticker = new CubicBezierTicker(CubicCurves.OutBack);
+            CubicBezierTicker ticker = new CubicBezierTicker(CubicBezierCurve.Back, EasingMode.EaseOut);
         }
     }
 }

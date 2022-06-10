@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>TestForm</RootNamespace>
     <AssemblyName>TestForm</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -29,6 +29,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <LangVersion>latest</LangVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -63,6 +64,9 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PropertyChanged, Version=3.4.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyChanged.Fody.3.4.0\lib\net40\PropertyChanged.dll</HintPath>
@@ -90,6 +94,36 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spline.cs" />
     <Compile Include="ViewModule\MainWindowModule.cs" />
+    <Compile Include="View\BezierCurveTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\BezierCurveTest.Designer.cs">
+      <DependentUpon>BezierCurveTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\BezierViewBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\CubicBezierView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\DoubleBufferedControlBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\QuadraticBezierView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\TestControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="View\TestWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\TestWindow.Designer.cs">
+      <DependentUpon>TestWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\TickerMotionView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +136,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\BezierCurveTest.resx">
+      <DependentUpon>BezierCurveTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\TestWindow.resx">
+      <DependentUpon>TestWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -120,6 +161,10 @@
     <ProjectReference Include="..\NullLib.TickAnimation.Drawing\NullLib.TickAnimation.Drawing.csproj">
       <Project>{84962bfc-33e1-4748-b8d9-d57e49314e46}</Project>
       <Name>NullLib.TickAnimation.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NullLib.TickAnimation.WinForm\NullLib.TickAnimation.WinForm.csproj">
+      <Project>{d6b06239-c99a-4999-9ce5-d0f87193aed4}</Project>
+      <Name>NullLib.TickAnimation.WinForm</Name>
     </ProjectReference>
     <ProjectReference Include="..\NullLib.TickAnimation\NullLib.TickAnimation.csproj">
       <Project>{5f29b4d0-ed27-45ec-8403-637cb5e80058}</Project>

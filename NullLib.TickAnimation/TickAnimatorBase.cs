@@ -10,11 +10,13 @@ namespace NullLib.TickAnimation
         protected Type objType;
 
         protected ITicker ticker;
-        protected int delay = 0;
+        protected int delay = 10;
         protected object obj;
         protected PropertyInfo prop;
         protected object doingState;
         protected Action<Action> propSetter = null;
+
+        protected CancellationTokenSource runningAnimationCancellationTokenSouorce;
 
         public ITicker Ticker => ticker;
         public object TargetInstance => obj;
@@ -64,56 +66,78 @@ namespace NullLib.TickAnimation
 
         public Task Animate<VT>(Func<double, VT> tickPicker, TimeSpan timeSpan)
         {
-            InitAnimation<VT>(out var newState);
-            return TickAnimationProc.Animate(ticker, tickPicker, timeSpan, GetAnimationCallback<VT>(newState));
+            InitAnimation<VT>();
+
+            CancellationTokenSource tokenSource = new CancellationTokenSource();
+            CancellationToken token = tokenSource.Token;
+
+            Func<VT, bool> callback;
+            if (propSetter == null)
+            {
+                callback = (value) =>
+                {
+                    if (token.IsCancellationRequested)
+                        return false;
+
+                    prop.SetValue(obj, value);
+                    Thread.Sleep(delay);
+                    return true;
+                };
+            }
+            else
+            {
+                callback = (value) =>
+                {
+                    if (token.IsCancellationRequested)
+                        return false;
+
+                    propSetter.Invoke(() => prop.SetValue(obj, value));
+                    Thread.Sleep(delay);
+                    return true;
+                };
+            }
+
+            runningAnimationCancellationTokenSouorce = tokenSource;
+            return Task.Run(() =>
+            {
+                TickAnimationProc.SyncAnimate(ticker, tickPicker, timeSpan, callback);
+            });
         }
         public ITickAnimator SyncAnimate<VT>(Func<double, VT> tickPicker, TimeSpan timeSpan)
         {
-            InitAnimation<VT>(out var newState);
-            TickAnimationProc.SyncAnimate(ticker, tickPicker, timeSpan, GetAnimationCallback<VT>(newState));
+            InitAnimation<VT>();
+
+            Action<VT> callback;
+            if (propSetter == null)
+            {
+                callback = (value) =>
+                {
+                    prop.SetValue(obj, value);
+                    Thread.Sleep(delay);
+                };
+            }
+            else
+            {
+                callback = (value) => propSetter.Invoke(() =>
+                {
+                    prop.SetValue(obj, value);
+                    Thread.Sleep(delay);
+                });
+            }
+
+            TickAnimationProc.SyncAnimate(ticker, tickPicker, timeSpan, callback);
             return this;
         }
 
 
         bool CheckPropType(Type type) => prop.PropertyType.IsAssignableFrom(type);
-        private Func<VT, bool> GetAnimationCallback<VT>(object state)
-        {
-            return
-                delay == 0 ?
-                    propSetter == null ?
-                        (v) =>
-                        {
-                            prop.SetValue(obj, v);
-                            return doingState == state;
-                        }
-                    :
-                        (v) =>
-                        {
-                            propSetter.Invoke(() => prop.SetValue(obj, v));
-                            return doingState == state;
-                        }
-                :
-                    propSetter == null ?
-                        (v) =>
-                        {
-                            prop.SetValue(obj, v);
-                            Thread.Sleep(delay);
-                            return doingState == state;
-                        }
-                    :
-                        (v) =>
-                        {
-                            propSetter.Invoke(() => prop.SetValue(obj, v));
-                            Thread.Sleep(delay);
-                            return doingState == state;
-                        };
-        }
 
-        private void InitAnimation<VT>(out object newObj)
+        private void InitAnimation<VT>()
         {
             if (!CheckPropType(typeof(VT)))
                 throw new InvalidOperationException("Type not match specified property type");
-            doingState = newObj = new object();
+            if (runningAnimationCancellationTokenSouorce != null)
+                runningAnimationCancellationTokenSouorce.Cancel();
         }
     }
 }

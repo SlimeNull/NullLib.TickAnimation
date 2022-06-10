@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
@@ -104,9 +105,9 @@ namespace NullLib.TickAnimation
                 diffwidth = end.Width - start.Width,
                 diffheight = end.Height - start.Height;
             return Animate((t) => new RectangleF((float)(start.X + diffx * t),
-                                                      (float)(start.Y + diffy * t),
-                                                      (float)(start.Width + diffwidth * t),
-                                                      (float)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
+                                                 (float)(start.Y + diffy * t),
+                                                 (float)(start.Width + diffwidth * t),
+                                                 (float)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
         }
         public Task Animate(Rectangle start, Rectangle end, int dur)
         {
@@ -116,9 +117,9 @@ namespace NullLib.TickAnimation
                 diffwidth = end.Width - start.Width,
                 diffheight = end.Height - start.Height;
             return Animate((t) => new Rectangle((int)(start.X + diffx * t),
-                                                      (int)(start.Y + diffy * t),
-                                                      (int)(start.Width + diffwidth * t),
-                                                      (int)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
+                                                (int)(start.Y + diffy * t),
+                                                (int)(start.Width + diffwidth * t),
+                                                (int)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
         }
         public Task Animate(RectangleF end, int dur) => Animate(GetPropertyValue<RectangleF>(), end, dur);
         public Task Animate(Rectangle end, int dur) => Animate(GetPropertyValue<Rectangle>(), end, dur);
@@ -131,9 +132,9 @@ namespace NullLib.TickAnimation
                 diffwidth = end.Width - start.Width,
                 diffheight = end.Height - start.Height;
             SyncAnimate((t) => new RectangleF((float)(start.X + diffx * t),
-                                                      (float)(start.Y + diffy * t),
-                                                      (float)(start.Width + diffwidth * t),
-                                                      (float)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
+                                              (float)(start.Y + diffy * t),
+                                              (float)(start.Width + diffwidth * t),
+                                              (float)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
             return this;
         }
         public ITickAnimator<Rectangle> SyncAnimate(Rectangle start, Rectangle end, int dur)
@@ -144,9 +145,9 @@ namespace NullLib.TickAnimation
                 diffwidth = end.Width - start.Width,
                 diffheight = end.Height - start.Height;
             SyncAnimate((t) => new Rectangle((int)(start.X + diffx * t),
-                                                   (int)(start.Y + diffy * t),
-                                                   (int)(start.Width + diffwidth * t),
-                                                   (int)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
+                                             (int)(start.Y + diffy * t),
+                                             (int)(start.Width + diffwidth * t),
+                                             (int)(start.Height + diffheight * t)), TimeSpan.FromMilliseconds(dur));
             return this;
         }
         public ITickAnimator<RectangleF> SyncAnimate(RectangleF end, int dur) => SyncAnimate(GetPropertyValue<RectangleF>(), end, dur);
@@ -154,31 +155,94 @@ namespace NullLib.TickAnimation
     }
     public partial class DrawingTickAnimator
     {
-        public Task Animate(Color start, Color end, int dur)
+        #region ColorLerp Definition
+#if NET47
+        static double Clamp(double value, double min, double max)
+        {
+            if (value < min)
+                return min;
+            if (max < value)
+                return max;
+            return value;
+        }
+        static Color ColorLerp(Color a, Color b, double t)
         {
             double
-                diffr = end.R - start.R,
-                diffg = end.G - start.G,
-                diffb = end.B - start.B,
-                diffa = end.A - start.A;
-            return Animate((t) => Color.FromArgb((int)(start.A + diffa * t),       // Fuck you world
-                                                       (int)(start.R + diffr * t),
-                                                       (int)(start.G + diffg * t),
-                                                       (int)(start.B + diffb * t)), TimeSpan.FromMilliseconds(dur));
+                diffr = b.R - a.R,
+                diffg = b.G - a.G,
+                diffb = b.B - a.B,
+                diffa = b.A - a.A;
+
+            return Color.FromArgb((int)Clamp(a.A + diffa * t, 0, 255),
+                                  (int)Clamp(a.R + diffr * t, 0, 255),
+                                  (int)Clamp(a.G + diffg * t, 0, 255),
+                                  (int)Clamp(a.B + diffb * t, 0, 255));
+        }
+#endif
+#if NETSTANDARD2_0
+        static double Clamp(double value, double min, double max)
+        {
+            if (value < min)
+                return min;
+            if (max < value)
+                return max;
+            return value;
+        }
+        static Color ColorLerp(Color a, Color b, double t)
+        {
+            double
+                diffr = b.R - a.R,
+                diffg = b.G - a.G,
+                diffb = b.B - a.B,
+                diffa = b.A - a.A;
+
+            return Color.FromArgb((int)Clamp(a.A + diffa * t, 0, 255),
+                                  (int)Clamp(a.R + diffr * t, 0, 255),
+                                  (int)Clamp(a.G + diffg * t, 0, 255),
+                                  (int)Clamp(a.B + diffb * t, 0, 255));
+        }
+#endif
+#if NET5_0
+        static Color ColorLerp(Color a, Color b, double t)
+        {
+            double
+                diffr = b.R - a.R,
+                diffg = b.G - a.G,
+                diffb = b.B - a.B,
+                diffa = b.A - a.A;
+
+            return Color.FromArgb((int)Math.Clamp(a.A + diffa * t, 0, 255),
+                                  (int)Math.Clamp(a.R + diffr * t, 0, 255),
+                                  (int)Math.Clamp(a.G + diffg * t, 0, 255),
+                                  (int)Math.Clamp(a.B + diffb * t, 0, 255));
+        }
+#endif
+#if NET6_0
+        static Color ColorLerp(Color a, Color b, double t)
+        {
+            double
+                diffr = b.R - a.R,
+                diffg = b.G - a.G,
+                diffb = b.B - a.B,
+                diffa = b.A - a.A;
+
+            return Color.FromArgb((int)Math.Clamp(a.A + diffa * t, 0, 255),
+                                  (int)Math.Clamp(a.R + diffr * t, 0, 255),
+                                  (int)Math.Clamp(a.G + diffg * t, 0, 255),
+                                  (int)Math.Clamp(a.B + diffb * t, 0, 255));
+        }
+#endif
+        #endregion
+
+        public Task Animate(Color start, Color end, int dur)
+        {
+            return Animate((t) => ColorLerp(start, end, t), TimeSpan.FromMilliseconds(dur));
         }
         public Task Animate(Color end, int dur) => Animate(GetPropertyValue<Color>(), end, dur);
 
         public ITickAnimator<Color> SyncAnimate(Color start, Color end, int dur)
         {
-            double
-                diffr = end.R - start.R,
-                diffg = end.G - start.G,
-                diffb = end.B - start.B,
-                diffa = end.A - start.A;
-            SyncAnimate((t) => Color.FromArgb((int)(start.A + diffa * t),       // Fuck you world
-                                                    (int)(start.R + diffr * t),
-                                                    (int)(start.G + diffg * t),
-                                                    (int)(start.B + diffb * t)), TimeSpan.FromMilliseconds(dur));
+            SyncAnimate((t) => ColorLerp(start, end, t), TimeSpan.FromMilliseconds(dur));
             return this;
         }
         public ITickAnimator<Color> SyncAnimate(Color end, int dur) => SyncAnimate(GetPropertyValue<Color>(), end, dur);
