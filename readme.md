@@ -2,7 +2,7 @@ NullLib.TickAnimation 用于实现对一个对象的属性(Property), 以指定�
 
 例如你可以使用它将一个 WinForm 窗体的 `Bounds` 从一个值过渡到另一个值以实现窗体位置与尺寸的过渡动画. 下面是一个简单示例:
 
-![preview](img/preview.gif)
+![preview](https://raw.github.com/SlimeNull/NullLib.TickAnimation/main/img/preview.gif)
 
 ## 快速开始
 
@@ -17,14 +17,10 @@ NullLib.TickAnimation 用于实现对一个对象的属性(Property), 以指定�
    ```csharp
    Rectangle workingArea = Screen.PrimaryScreen.WorkingArea;        // 获取主屏幕的工作区矩形
    DrawingTickAnimator animator = new DrawingTickAnimator(new SineTicker(), this, nameof(Bounds));   // 创建动画控制器实例
-   animator.SetPropertySetter((setAction) => Invoke(setAction));    // 解决窗体程序的跨线程资源访问问题
-   animator.SetTickDelay(1);                                        // 在每一帧后进行 1ms 的延时
    animator.Animate(workingArea, 200);                              // 进行动画, 时间是 200ms
    ```
 
 5. 运行程序, 点击按钮, 查看效果
-
-> 本库已在 GitHub 开源, [github.com/SlimeNull/NullLib.TickAnimation](https://github.com/SlimeNull/NullLib.TickAnimation)
 
 ## 基本原理
 

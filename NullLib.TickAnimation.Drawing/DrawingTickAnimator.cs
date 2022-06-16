@@ -17,7 +17,6 @@ namespace NullLib.TickAnimation
     }
     public partial class DrawingTickAnimator
     {
-
         public Task Animate(PointF start, PointF end, int dur)
         {
             double

@@ -23,28 +23,32 @@ namespace NullLib.TickAnimation
         public PropertyInfo TargetProperty => prop;
         public int TickDelay { get => delay; }
 
-        public void SetTicker(ITicker ticker)
+        public ITickAnimator SetTicker(ITicker ticker)
         {
             if (ticker is null)
                 throw new ArgumentNullException(nameof(ticker));
             this.ticker = ticker;
+            return this;
         }
-        public void SetTickDelay(int delay)
+        public ITickAnimator SetTickDelay(int delay)
         {
             this.delay = delay;
+            return this;
         }
-        public void SetPropertySetter(Action<Action> setter)
+        public ITickAnimator SetPropertySetter(Action<Action> setter)
         {
             propSetter = setter;
+            return this;
         }
-        public void SetTargetInstance(object obj)
+        public ITickAnimator SetTargetInstance(object obj)
         {
             if (obj is null)
                 throw new ArgumentNullException(nameof(obj));
             this.obj = obj;
             this.objType = obj.GetType();
+            return this;
         }
-        public void SetTargetProperty(PropertyInfo prop)
+        public ITickAnimator SetTargetProperty(PropertyInfo prop)
         {
             if (prop == null)
                 throw new ArgumentNullException(nameof(prop));
@@ -55,13 +59,14 @@ namespace NullLib.TickAnimation
             if (!prop.CanWrite)
                 throw new ArgumentOutOfRangeException(nameof(prop), "Property cannot be written!");
             this.prop = prop;
+            return this;
         }
-        public void SetTargetProperty(string propName)
+        public ITickAnimator SetTargetProperty(string propName)
         {
             PropertyInfo prop = objType.GetProperty(propName);
             if (prop == null)
                 throw new ArgumentOutOfRangeException(propName, "Property not found");
-            SetTargetProperty(prop);
+            return SetTargetProperty(prop);
         }
 
         public Task Animate<VT>(Func<double, VT> tickPicker, TimeSpan timeSpan)
@@ -71,37 +76,34 @@ namespace NullLib.TickAnimation
             CancellationTokenSource tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;
 
-            Func<VT, bool> callback;
+            Func<VT, Task<bool>> callback;
             if (propSetter == null)
             {
-                callback = (value) =>
+                callback = async (value) =>
                 {
                     if (token.IsCancellationRequested)
                         return false;
 
                     prop.SetValue(obj, value);
-                    Thread.Sleep(delay);
+                    await Task.Delay(delay, token);
                     return true;
                 };
             }
             else
             {
-                callback = (value) =>
+                callback = async (value) =>
                 {
                     if (token.IsCancellationRequested)
                         return false;
 
                     propSetter.Invoke(() => prop.SetValue(obj, value));
-                    Thread.Sleep(delay);
+                    await Task.Delay(delay, token);
                     return true;
                 };
             }
 
             runningAnimationCancellationTokenSouorce = tokenSource;
-            return Task.Run(() =>
-            {
-                TickAnimationProc.SyncAnimate(ticker, tickPicker, timeSpan, callback);
-            });
+            return TickAnimationProc.Animate(ticker, tickPicker, timeSpan, callback);
         }
         public ITickAnimator SyncAnimate<VT>(Func<double, VT> tickPicker, TimeSpan timeSpan)
         {
@@ -129,12 +131,9 @@ namespace NullLib.TickAnimation
             return this;
         }
 
-
-        bool CheckPropType(Type type) => prop.PropertyType.IsAssignableFrom(type);
-
         private void InitAnimation<VT>()
         {
-            if (!CheckPropType(typeof(VT)))
+            if (!prop.PropertyType.IsAssignableFrom(typeof(VT)))
                 throw new InvalidOperationException("Type not match specified property type");
             if (runningAnimationCancellationTokenSouorce != null)
                 runningAnimationCancellationTokenSouorce.Cancel();

@@ -3,14 +3,14 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net47;net5;net6</TargetFrameworks>
 	<LangVersion>latest</LangVersion>
-	<Version>1.1.2.0</Version>
+	<Version>1.2.0</Version>
 	<Description>TickAnimation, process element easing easily by bezier curves. 嘀嗒动画, 通过贝塞尔曲线方便快捷的实现元素缓动</Description>
 	<Copyright>Copyright 2021 SlimeNull</Copyright>
 	<PackageProjectUrl>https://github.com/SlimeNull/NullLib.TickAnimation</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/SlimeNull/NullLib.TickAnimation</RepositoryUrl>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	<LangVersion>latest</LangVersion>
+	<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

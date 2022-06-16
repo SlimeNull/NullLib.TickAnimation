@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NullLib.TickAnimation;
-using NullLib.TickAnimation.WinForm;
 using TestForm.View;
 using TestForm.ViewModule;
 
@@ -27,11 +26,7 @@ namespace TestForm
             pnColorAnimator = new DrawingTickAnimator(new CubicTicker(EasingMode.EaseOut), this, nameof(PnColor));
 
             CheckForIllegalCrossThreadCalls = false;
-            navAnimator.UseWinForm(this);
-            funnyBtnAnimator.UseWinForm(funnyBtn);         // invoke an action at main thread 在主线程上invoke一个action
-            formAnimator.UseWinForm(this);
 
-            //funnyBtn.MouseEnter += funnyBtn_Click;
             funnyBtn.MouseEnter += funnyBtn_RandomMove;
 
             for (int i = 0; i < 10; i++)
@@ -44,7 +39,6 @@ namespace TestForm
                 };
 
                 var animator = new TickAnimator(new BackTicker(EasingMode.EaseOut), btn, nameof(btn.Height));
-                animator.UseWinForm(btn);
 
                 btn.MouseEnter += (sender, e) => animator.Animate(85, 300);
                 btn.MouseLeave += (sender, e) => animator.Animate(45, 300);
@@ -53,7 +47,6 @@ namespace TestForm
             }
 
             TickAnimator titleAnimator = new TickAnimator(new CircleTicker(EasingMode.EaseOut), formTitle, nameof(Left));
-            titleAnimator.UseWinForm(formTitle);
 
             int originTitleLeft = formTitle.Left;
             formTitle.MouseEnter += (s, e) => titleAnimator.Animate(originTitleLeft + 50, 300);
@@ -69,9 +62,30 @@ namespace TestForm
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            BufferedGraphicsManager.Current.Allocate(Graphics.FromHwnd(IntPtr.Zero), new Rectangle(0, 0, Width, Height));
+            BufferedGraphicsManager.Current.Allocate(
+                Graphics.FromHwnd(IntPtr.Zero), new Rectangle(0, 0, Width, Height));
             IsShowMenu = false;
             recordedState = Bounds;
+
+            Task.Run(async () =>
+            {
+                int minTime = 10,      // 位置移动最小时间
+                    maxTime = 50,      // 位置移动最大时间
+                    shakeSize = 5;     // 摇动大小
+
+                DrawingTickAnimator animator = new(appAuthor, nameof(Location));
+
+                Point basePoint = appAuthor.Location;       // 获取初始点
+                Random random = new Random();               // Random 对象
+                while (true)
+                {
+                    int randTime = random.Next(minTime, maxTime);   // 随机移动时间
+                    Size randPoint = new Size(                      // 随机偏移量
+                        random.Next(-shakeSize, shakeSize),
+                        random.Next(-shakeSize, shakeSize));
+                    await animator.Animate(basePoint + randPoint, randTime);   // 移动到目标位置
+                }
+            });
         }
 
         TickAnimator navAnimator;
@@ -91,10 +105,6 @@ namespace TestForm
                 isShowMenu = value;
                 if (value)
                 {
-                    //mask.BackColor = Color.Transparent;
-                    //mask.BringToFront();
-                    //navContainer.BringToFront();
-                    //maskAnimator.FrameAnimate(mask.BackColor, Color.FromArgb(50, 0, 0, 0), 100);
                     navAnimator.SetTicker(tempTicker);
                     navAnimator.Animate(300, 500).ContinueWith((t) =>    // show menu bar  显示菜单栏, 500ms
                     {

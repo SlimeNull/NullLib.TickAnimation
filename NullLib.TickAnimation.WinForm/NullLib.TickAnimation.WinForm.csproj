@@ -1,16 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net471</TargetFramework>
+    <TargetFrameworks>net47;net5.0-windows;net6.0-windows</TargetFrameworks>
     <Nullable>enable</Nullable>
-	  <LangVersion>latest</LangVersion>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <Version>1.1.0</Version>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NullLib.TickAnimation.Drawing" Version="1.1.3" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NullLib.TickAnimation\NullLib.TickAnimation.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="$(TargetFramework) == 'net47'">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 

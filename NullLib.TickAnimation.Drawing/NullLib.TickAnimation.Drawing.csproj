@@ -1,20 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net47;net5;net6</TargetFrameworks>
-    <RootNamespace>NullLib.TickAnimation</RootNamespace>
-    <Version>1.1.3.0</Version>
-    <Copyright>Copyright 2021 SlimeNull</Copyright>
-    <PackageProjectUrl>https://github.com/SlimeNull/NullLib.TickAnimation</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/SlimeNull/NullLib.TickAnimation</RepositoryUrl>
-    <RepositoryType>GitHub</RepositoryType>
-    <PackageLicenseFile></PackageLicenseFile>
-    <Description>TickAnimation externsion for System.Drawing, provides ways to do easing of point, size, rectangle, and color. 针对 System.Drawing 的 TickAnimation 拓展, 提供执行点, 尺寸, 矩形区域, 以及颜色的过渡的方式</Description>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net47;net5;net6</TargetFrameworks>
+        <RootNamespace>NullLib.TickAnimation</RootNamespace>
+        <Version>1.2.0</Version>
+        <Copyright>Copyright 2021 SlimeNull</Copyright>
+        <PackageProjectUrl>https://github.com/SlimeNull/NullLib.TickAnimation</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/SlimeNull/NullLib.TickAnimation</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <Description>TickAnimation externsion for System.Drawing, provides ways to do easing of point, size, rectangle, and color. 针对 System.Drawing 的 TickAnimation 拓展, 提供执行点, 尺寸, 矩形区域, 以及颜色的过渡的方式</Description>
+        <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NullLib.TickAnimation" Version="1.1.2" />
-  </ItemGroup>
+    <ItemGroup Condition="$(Configuration) == 'Debug'">
+        <ProjectReference Include="..\NullLib.TickAnimation\NullLib.TickAnimation.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(Configuration) == 'Release'">
+      <PackageReference Include="NullLib.TickAnimation" Version="1.1.2" />
+    </ItemGroup>
 
 </Project>

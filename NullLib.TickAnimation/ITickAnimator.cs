@@ -6,11 +6,11 @@ namespace NullLib.TickAnimation
 {
     public interface ITickAnimator
     {
-        void SetTicker(ITicker ticker);
-        void SetTargetInstance(object obj);
-        void SetTargetProperty(string propName);
-        void SetTargetProperty(PropertyInfo prop);
-        void SetPropertySetter(Action<Action> setter);
+        ITickAnimator SetTicker(ITicker ticker);
+        ITickAnimator SetTargetInstance(object obj);
+        ITickAnimator SetTargetProperty(string propName);
+        ITickAnimator SetTargetProperty(PropertyInfo prop);
+        ITickAnimator SetPropertySetter(Action<Action> setter);
 
         ITickAnimator SyncAnimate<VT>(Func<double, VT> tickPicker, TimeSpan timeSpan);
         Task Animate<VT>(Func<double, VT> tickPicker, TimeSpan timeSpan);

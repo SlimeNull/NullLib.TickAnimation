@@ -162,10 +162,6 @@
       <Project>{84962bfc-33e1-4748-b8d9-d57e49314e46}</Project>
       <Name>NullLib.TickAnimation.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NullLib.TickAnimation.WinForm\NullLib.TickAnimation.WinForm.csproj">
-      <Project>{d6b06239-c99a-4999-9ce5-d0f87193aed4}</Project>
-      <Name>NullLib.TickAnimation.WinForm</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NullLib.TickAnimation\NullLib.TickAnimation.csproj">
       <Project>{5f29b4d0-ed27-45ec-8403-637cb5e80058}</Project>
       <Name>NullLib.TickAnimation</Name>
